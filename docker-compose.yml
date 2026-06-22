@@ -1,0 +1,34 @@
+services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: iti_attendance_api
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/var/www
+        depends_on:
+            - database
+        environment:
+            - DB_CONNECTION=pgsql
+            - DB_HOST=database
+            - DB_PORT=5432
+            - DB_DATABASE=iti_attendance
+            - DB_USERNAME=iti_user
+            - DB_PASSWORD=iti_password
+
+    database:
+        image: postgres:16-alpine
+        container_name: iti_attendance_db
+        ports:
+            - "5433:5432"
+        environment:
+            POSTGRES_DB: iti_attendance
+            POSTGRES_USER: iti_user
+            POSTGRES_PASSWORD: iti_password
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+volumes:
+    db_data:
